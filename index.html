@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promises</title>
     <style>
-        table {
+        /* table {
             width: 100vw;
-        }
+        } */
 
         td {
             margin: 10px;
@@ -32,21 +32,23 @@
             <th></th>
         </tr>
     </table> -->
+    <input type="text" id="searchText" onkeyup="search()">
     <table id="table">
         <tr>
             <th>ID</th>
-            <th>Profile picture </th>
+            <th>Profile picture</th>
             <th>FirstName</th>
             <th>LastName</th>
             <th>MiddleName</th>
             <th>age</th>
         </tr>
     </table>
-    <button onclick="loadMore()">Load More</button>
+    <button id="loadMore" onclick="loadMore()">Load More</button>
     <div id="error"></div>
     <script>
         var limit = 10;
         var skip = 0;
+        var data = [];
         function loadMore() {
             fetch('https://dummyjson.com/users?limit=' + limit + '&skip=' + skip)
                 .then((response) => {
@@ -56,31 +58,75 @@
                     document.getElementById('error').innerText = error;
                 })
                 .then((json) => {
-                    if (json.users) {
+                    if (json.users.length > 0) {
                         json.users.forEach((user) => {
                             document.getElementById('table').innerHTML += `
                         <tr>
                             <td>${user.id}</td>
                             <td class="right"><img src="${user.image}"></img></td>
-                            <td>${user.firstName}</td>
+                            <td class="firstName">${user.firstName}</td>
                             <td>${user.lastName}</td>
                             <td>${user.maidenName}</td>
                             <td>${user.age}</td>
                         </tr>`;
-                            skip = skip + 10;
+                            data.push(user);
                         });
+
+                        skip = skip + 10;
                     }
                     else {
-                        document.getElementById('table').remove();
+                        console.log('complete');
+                        document.getElementById('loadMore').remove();
                         document.getElementById('error').innerText = "All Data Loaded";
                     }
                 });
         }
         loadMore();
-        // fetch('https://dummyjson.com/users/')
-        //     .then(res => res.json())
-        //     .then(json => console.log(json))
 
+        function search() {
+            let query = document.getElementById('searchText').value;
+            document.getElementById('error').innerText = query;
+            let found = [];
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].firstName.toLowerCase().includes(query)) {
+                    found.push(data[i]);
+                }
+
+            }
+            if (found.length === 0) {
+                document.getElementById('table').innerHTML = `<tr>
+                    <th>ID</th>
+                    <th>Profile picture</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>MiddleName</th>
+                    <th>age</th>
+                </tr>`;
+                console.log('no users found');
+                document.getElementById('error').innerText = "No users found";
+            }
+            else {
+                document.getElementById('table').innerHTML = `<tr>
+                    <th>ID</th>
+                    <th>Profile picture</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>MiddleName</th>
+                    <th>age</th>
+                </tr>`;
+                found.forEach((user) => {
+                    document.getElementById('table').innerHTML += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td class="right"><img src="${user.image}"></img></td>
+                            <td class="firstName">${user.firstName}</td>
+                            <td>${user.lastName}</td>
+                            <td>${user.maidenName}</td>
+                            <td>${user.age}</td>
+                        </tr>`;
+                })
+            }
+        }
     </script>
 </body>
 
