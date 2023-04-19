@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promises</title>
+    <style>
+        td {
+            margin: 10px;
+        }
+        .right{
+          float: right;
+        }
+        img {
+            width: 20px;
+            height:20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <table>
+        <tr>
+            <th></th>
+        </tr>
+    </table> -->
+    <table id="table">
+        <tr>
+            <th>ID</th>
+            <th>Profile picture </th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>MiddleName</th>
+            <th>age</th>
+        </tr>
+    </table>
+    <button onclick="loadMore()">Load More</button>
+    <div id="error"></div>
+    <script>
+        var limit = 10;
+        var skip = 0;
+        function loadMore() {
+            fetch('https://dummyjson.com/users?limit=' + limit + '&skip=' + skip)
+                .then((response) => {
+                    return response.json();
+                }, (error) => {
+                    console.log('Error:- ', error)
+                    document.getElementById('error').innerText = error;
+                })
+                .then((json) => {
+                    json.users.forEach((user) => {
+                        document.getElementById('table').innerHTML += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td class="right"><img src="${user.image}"></img></td>
+                            <td>${user.firstName}</td>
+                            <td>${user.lastName}</td>
+                            <td>${user.maidenName}</td>
+                            <td>${user.age}</td>
+                        </tr>`;
+
+                    });
+                    skip = skip + 10;
+                });
+        }
+        loadMore();
+        // fetch('https://dummyjson.com/users/')
+        //     .then(res => res.json())
+        //     .then(json => console.log(json))
+
+    </script>
+</body>
+
+</html>
