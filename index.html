@@ -9,16 +9,18 @@
     <style>
         table,
         th,
-        table,
-        th,
         td {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        /* td {
-            margin: 10px;
-        } */
+        table {
+            margin: 10px 0;
+        }
+
+        td {
+            padding: 2px;
+        }
 
         .right {
             float: right;
@@ -37,11 +39,12 @@
             <th></th>
         </tr>
     </table> -->
-    <input type="text" id="searchText" onkeyup="search()">
+    <input type="text" id="searchText" placeholder="Enter FirstName here " onkeyup="search()">
+    <br>
     <table id="table">
         <tr>
             <th>ID</th>
-            <th>Profile picture</th>
+            <th>Pic</th>
             <th>FirstName</th>
             <th>LastName</th>
             <th>MiddleName</th>
